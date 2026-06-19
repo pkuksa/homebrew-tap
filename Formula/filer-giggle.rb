@@ -20,6 +20,9 @@ class FilerGiggle < Formula
       # On Linuxbrew/CentOS this can make configure search for x86_64-gcc
       # and fail with "C compiler cannot create executables".
       inreplace "Makefile", "--host=x86_64", ""
+      ENV.deparallelize
+      ENV["CC"] = "gcc"
+      ENV["CXX"] = "g++"
       system "make"
     end
 
