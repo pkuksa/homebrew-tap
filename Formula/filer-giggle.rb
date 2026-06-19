@@ -34,10 +34,10 @@ class FilerGiggle < Formula
       inreplace "src/Makefile", "-lcurl", ""
       inreplace "src/Makefile", "-lcrypto", ""
 
-      if File.exist?("/usr/bin/gcc")
-        ENV["CC"] = "/usr/bin/gcc"
-        ENV["CXX"] = "/usr/bin/g++"
-      end
+      # if File.exist?("/usr/bin/gcc")
+      #  ENV["CC"] = "/usr/bin/gcc"
+      #  ENV["CXX"] = "/usr/bin/g++"
+      # end
 
       system "make"
     end
