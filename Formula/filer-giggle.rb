@@ -5,39 +5,32 @@ class FilerGiggle < Formula
   sha256 "d8e0a30af6d4c5b0524055e379afd95b4f9973184b90bb2e931f41e20f0fb461"
   license "MIT"
 
-  depends_on "bzip2"
-  depends_on "curl"
-  depends_on "openssl@3"
-  depends_on "xz"
   depends_on "zlib"
+
+  on_macos do
+    depends_on "bzip2"
+    depends_on "curl"
+    depends_on "openssl@3"
+    depends_on "xz"
+  end
 
   def install
     if OS.mac?
-      # system "make", "clean"
       system "make", "-f", "Makefile.macos"
     else
-      # The Linux Makefile passes --host=x86_64 to htslib's configure.
-      # On Linuxbrew/CentOS this can make configure search for x86_64-gcc
-      # and fail with "C compiler cannot create executables".
       inreplace "Makefile", "--host=x86_64", ""
-      
+      inreplace "Makefile", "./configure", "CC=/usr/bin/gcc ./configure"
+
       ENV.deparallelize
-   
-      # The Linux build currently hardcodes gcc. On CentOS Stream 8 with
-      # Linuxbrew, plain gcc may resolve to Homebrew gcc-16, which can crash
-      # during collect2/linking. Use the system compiler instead.
+
       inreplace "src/Makefile", /\bgcc\b/, "/usr/bin/gcc"
-      # Dir["**/Makefile"].each do |makefile|
-      #   inreplace makefile, /\bgcc\b/, "/usr/bin/gcc"
-      # end
 
-      inreplace "src/Makefile", "-lcurl", ""
-      inreplace "src/Makefile", "-lcrypto", ""
-
-      # if File.exist?("/usr/bin/gcc")
-      #  ENV["CC"] = "/usr/bin/gcc"
-      #  ENV["CXX"] = "/usr/bin/g++"
-      # end
+      inreplace "src/Makefile" do |s|
+        s.gsub! "-L/usr/local/opt/openssl/lib", ""
+        s.gsub! "-L/opt/local/lib", ""
+        s.gsub! "-lcurl", ""
+        s.gsub! "-lcrypto", ""
+      end
 
       system "make"
     end
@@ -46,8 +39,8 @@ class FilerGiggle < Formula
   end
 
   test do
-    output = shell_output("#{bin}/giggle search 2>&1 || true")
-    assert_match "usage:", output
-    assert_match "giggle", output
+    output = shell_output("#{bin}/giggle search 2>&1", 1)
+    assert_match "giggle, v0.6.3fsbv", output
+    assert_match "usage:   giggle search -i <index directory>", output
   end
 end
