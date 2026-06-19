@@ -21,8 +21,12 @@ class FilerGiggle < Formula
       # and fail with "C compiler cannot create executables".
       inreplace "Makefile", "--host=x86_64", ""
       ENV.deparallelize
-      ENV["CC"] = "gcc"
-      ENV["CXX"] = "g++"
+
+			if File.exist?("/usr/bin/gcc")
+        ENV["CC"] = "/usr/bin/gcc"
+        ENV["CXX"] = "/usr/bin/g++"
+      end
+
       system "make"
     end
 
