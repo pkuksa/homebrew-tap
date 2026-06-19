@@ -18,8 +18,11 @@ class FilerGiggle < Formula
     if OS.mac?
       system "make", "-f", "Makefile.macos"
     else
+      arch = Hardware::CPU.arm? ? "aarch64" : "x86_64"
+      triplet = "#{arch}-pc-linux-gnu"
+
       inreplace "Makefile", "--host=x86_64", ""
-      inreplace "Makefile", "./configure", "CC=/usr/bin/gcc ./configure"
+      inreplace "Makefile", "./configure", "CC=/usr/bin/gcc ./configure --build=#{triplet} --host=#{triplet}"
 
       ENV.deparallelize
 
