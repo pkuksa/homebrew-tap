@@ -21,12 +21,12 @@ class FilerGiggle < Formula
       # and fail with "C compiler cannot create executables".
       inreplace "Makefile", "--host=x86_64", ""
       
-			# ENV.deparallelize
+			ENV.deparallelize
 
-			# if File.exist?("/usr/bin/gcc")
-      #  ENV["CC"] = "/usr/bin/gcc"
-      #  ENV["CXX"] = "/usr/bin/g++"
-      # end
+			if File.exist?("/usr/bin/gcc")
+        ENV["CC"] = "/usr/bin/gcc"
+        ENV["CXX"] = "/usr/bin/g++"
+      end
 
 			# The Linux build currently hardcodes gcc. On CentOS Stream 8 with
       # Linuxbrew, plain gcc may resolve to Homebrew gcc-16, which can crash
