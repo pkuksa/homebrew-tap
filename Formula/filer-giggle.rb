@@ -27,6 +27,11 @@ class FilerGiggle < Formula
         ENV["CXX"] = "/usr/bin/g++"
       end
 
+			# The Linux build currently hardcodes gcc. On CentOS Stream 8 with
+      # Linuxbrew, plain gcc may resolve to Homebrew gcc-16, which can crash
+      # during collect2/linking. Use the system compiler instead.
+      inreplace "src/Makefile", /\bgcc\b/, "/usr/bin/gcc"
+
       system "make"
     end
 
