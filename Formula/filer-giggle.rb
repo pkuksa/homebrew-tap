@@ -42,7 +42,7 @@ class FilerGiggle < Formula
   end
 
   test do
-    output = shell_output("#{bin}/giggle search 2>&1", 1)
+    output = shell_output("#{bin}/giggle search 2>&1")
     assert_match "giggle, v0.6.3fsbv", output
     assert_match "usage:   giggle search -i <index directory>", output
   end
