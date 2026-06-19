@@ -27,6 +27,12 @@ class FilerGiggle < Formula
       # Linuxbrew, plain gcc may resolve to Homebrew gcc-16, which can crash
       # during collect2/linking. Use the system compiler instead.
       inreplace "src/Makefile", /\bgcc\b/, "/usr/bin/gcc"
+      # Dir["**/Makefile"].each do |makefile|
+      #   inreplace makefile, /\bgcc\b/, "/usr/bin/gcc"
+      # end
+
+      inreplace "src/Makefile", "-lcurl", ""
+      inreplace "src/Makefile", "-lcrypto", ""
 
       if File.exist?("/usr/bin/gcc")
         ENV["CC"] = "/usr/bin/gcc"
