@@ -16,6 +16,10 @@ class FilerGiggle < Formula
       # system "make", "clean"
       system "make", "-f", "Makefile.macos"
     else
+		  # The Linux Makefile passes --host=x86_64 to htslib's configure.
+      # On Linuxbrew/CentOS this can make configure search for x86_64-gcc
+      # and fail with "C compiler cannot create executables".
+      inreplace "Makefile", "--host=x86_64", ""
       system "make"
     end
 
