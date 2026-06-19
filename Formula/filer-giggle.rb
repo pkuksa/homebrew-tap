@@ -16,14 +16,14 @@ class FilerGiggle < Formula
       # system "make", "clean"
       system "make", "-f", "Makefile.macos"
     else
-		  # The Linux Makefile passes --host=x86_64 to htslib's configure.
+      # The Linux Makefile passes --host=x86_64 to htslib's configure.
       # On Linuxbrew/CentOS this can make configure search for x86_64-gcc
       # and fail with "C compiler cannot create executables".
       inreplace "Makefile", "--host=x86_64", ""
       
-			ENV.deparallelize
-			
-			# The Linux build currently hardcodes gcc. On CentOS Stream 8 with
+      ENV.deparallelize
+   
+      # The Linux build currently hardcodes gcc. On CentOS Stream 8 with
       # Linuxbrew, plain gcc may resolve to Homebrew gcc-16, which can crash
       # during collect2/linking. Use the system compiler instead.
       inreplace "src/Makefile", /\bgcc\b/, "/usr/bin/gcc"
